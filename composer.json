@@ -23,7 +23,8 @@
                 "RuLong\\Order\\ServiceProvider"
             ],
             "aliases": {
-                "Orders": "RuLong\\Order\\Facades\\Orders"
+                "Orders": "RuLong\\Order\\Facades\\Orders",
+                "Refunds": "RuLong\\Order\\Facades\\Refunds"
             }
         }
     }

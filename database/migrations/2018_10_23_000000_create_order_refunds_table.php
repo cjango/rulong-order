@@ -17,10 +17,12 @@ class CreateOrderRefundsTable extends Migration
         Schema::create('order_refunds', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('order_id')->unsigned()->comment('关联订单id');
-            $table->string('orderid', 20)->unique('orderid')->comment('退款单号');
+            $table->string('orderid', 32)->unique('orderid')->comment('退款单号');
             $table->decimal('refund_total', 20, 3)->unsigned()->comment('退款金额');
-            $table->decimal('actual_total', 20, 3)->unsigned()->comment('实退金额');
+            $table->decimal('actual_total', 20, 3)->unsigned()->default(0.000)->comment('实退金额');
             $table->string('state', 16);
+            $table->string('remark')->nullable();
+            $table->dateTime('refunded_at')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use RuLong\Order\Traits\OrderCando;
 use RuLong\Order\Traits\OrderHasActions;
 use RuLong\Order\Traits\OrderHasAttributes;
+use RuLong\Order\Utils\Helper;
 
 class Order extends Model
 {
@@ -43,7 +44,7 @@ class Order extends Model
         parent::boot();
 
         self::creating(function ($model) {
-            $model->orderid = date('ymdhis') . sprintf('%08d', rand(0, 99999999));
+            $model->orderid = Helper::orderid(config('rulong_order.order_orderid.length'), config('rulong_order.order_orderid.prefix'));
         });
     }
 

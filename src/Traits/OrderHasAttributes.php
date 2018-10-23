@@ -14,7 +14,7 @@ trait OrderHasAttributes
      * @param [type] $type [description]
      * @param [type] $change [description]
      */
-    private function setOrderStatus($type, $change)
+    public function setOrderStatus($type, $change)
     {
         $status = sprintf('%04d', $this->status);
 
@@ -42,7 +42,7 @@ trait OrderHasAttributes
      * @param [type] $change [description]
      * @return [type] [description]
      */
-    private function getOrderStatus($type)
+    public function getOrderStatus($type)
     {
         $status = sprintf('%04d', $this->status);
 

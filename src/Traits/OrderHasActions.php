@@ -3,12 +3,10 @@
 namespace RuLong\Order\Traits;
 
 use Carbon\Carbon;
-use Illuminate\Support\Facades\DB;
 use RuLong\Order\Events\OrderCanceled;
 use RuLong\Order\Events\OrderPaid;
 use RuLong\Order\Exceptions\OrderException;
 use RuLong\Order\Models\Order;
-use RuLong\Order\Models\Refund;
 
 trait OrderHasActions
 {
@@ -175,34 +173,18 @@ trait OrderHasActions
     }
 
     /**
-     * 申请退款
+     * 申请退款，创建退款单
      * @Author:<C.Jason>
-     * @Date:2018-10-22T14:57:32+0800
-     * @param array $orderDetails [description]
-     * @param float $total [description]
-     * @param integer $pay [description]
-     * @param integer $deliver [description]
-     * @return [type] [description]
+     * @Date:2018-10-23T14:10:54+0800
+     * @param array $items 退款项目
+     * [
+     *     ['item_id' => integer, 'number' => integer],
+     *     ['item_id' => integer, 'number' => integer],
+     * ]
+     * @param float $total 申请退款金额
      */
-    public function refunding(array $details, float $total, $pay = 2, $deliver = 7)
+    public function createRefund(array $items, float $total = null)
     {
-        $refund = null;
-        DB::transaction(function () use ($details, $total, $pay, $deliver, &$refund) {
-            $this->setOrderStatus('pay', $pay);
-            $this->setOrderStatus('deliver', $deliver);
-            $this->state = Order::REFUND_APPLY;
-            $this->save();
-
-            $refund = $this->refund()->create([
-                'refund_total' => $total,
-                'actual_total' => 0,
-                'state'        => Refund::REFUND_APPLY,
-            ]);
-
-            foreach ($details as $detail) {
-                $refund->items()->save($detail);
-            }
-        });
-        return $refund;
+        return \Orders::refund($this, $items, $total);
     }
 }

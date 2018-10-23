@@ -4,11 +4,13 @@ namespace RuLong\Order\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use RuLong\Order\Traits\RefundHasActions;
+use RuLong\Order\Utils\Helper;
 
 class Refund extends Model
 {
 
-    use SoftDeletes;
+    use RefundHasActions, SoftDeletes;
 
     const REFUND_APPLY     = 'REFUND_APPLY'; // 申请退款
     const REFUND_AGREE     = 'REFUND_AGREE'; // 同意退款
@@ -20,12 +22,16 @@ class Refund extends Model
 
     protected $guarded = [];
 
+    protected $dates = [
+        'refunded_at',
+    ];
+
     public static function boot()
     {
         parent::boot();
 
         self::creating(function ($model) {
-            $model->orderid = 'R' . date('ymdhis') . sprintf('%07d', rand(0, 9999999));
+            $model->orderid = Helper::orderid(config('rulong_order.refund_orderid.length'), config('rulong_order.refund_orderid.prefix'));
         });
     }
 
@@ -52,6 +58,17 @@ class Refund extends Model
     }
 
     /**
+     * 退款单物流
+     * @Author:<C.Jason>
+     * @Date:2018-10-19T10:36:03+0800
+     * @return OrderExpress
+     */
+    public function express()
+    {
+        return $this->hasOne(RefundExpress::class);
+    }
+
+    /**
      * 获取退款状态 $this->state_text
      * @Author:<C.Jason>
      * @Date:2018-10-19T10:56:24+0800
@@ -61,7 +78,7 @@ class Refund extends Model
     {
         switch ($this->state) {
             case self::REFUND_APPLY:
-                $state = '申请退款';
+                $state = '退款申请中';
                 break;
             case self::REFUND_AGREE:
                 $state = '同意退款';

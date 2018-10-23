@@ -53,12 +53,38 @@ class OrderDetail extends Model
     }
 
     /**
+     * 获取最大可退数量
+     * @Author:<C.Jason>
+     * @Date:2018-10-23T11:36:43+0800
+     * @return [type] [description]
+     */
+    public function getMaxRefundAttribute()
+    {
+        $refundNumbers = $this->refundItems()->whereHas('refund', function ($query) {
+            $query->whereNotIn('state', [Order::REFUND_REFUSE]);
+        })->sum('number');
+
+        return $this->number - $refundNumbers;
+    }
+
+    /**
+     * 关联退款详单
+     * @Author:<C.Jason>
+     * @Date:2018-10-23T11:44:22+0800
+     * @return [type] [description]
+     */
+    public function refundItems()
+    {
+        return $this->hasMany(RefundItem::class);
+    }
+
+    /**
      * 获取单个商品总价
      * @Author:<C.Jason>
      * @Date:2018-10-19T13:51:19+0800
      * @return string
      */
-    public function getItemTotalAttribute()
+    public function getTotalAttribute()
     {
         return bcmul($this->price, $this->number, 3);
     }
