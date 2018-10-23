@@ -4,7 +4,13 @@ namespace RuLong\Order\Traits;
 
 use Carbon\Carbon;
 use RuLong\Order\Events\OrderCanceled;
+use RuLong\Order\Events\OrderClosed;
+use RuLong\Order\Events\OrderCompleted;
+use RuLong\Order\Events\OrderDelaied;
+use RuLong\Order\Events\OrderDelivered;
 use RuLong\Order\Events\OrderPaid;
+use RuLong\Order\Events\OrderSigned;
+use RuLong\Order\Events\OrderUnreceived;
 use RuLong\Order\Exceptions\OrderException;
 use RuLong\Order\Models\Order;
 
@@ -104,6 +110,8 @@ trait OrderHasActions
         $this->state = Order::ORDER_DELIVERED;
         $this->save();
 
+        event(new OrderDelivered($this));
+
         return true;
     }
 
@@ -125,6 +133,8 @@ trait OrderHasActions
         $this->state = Order::ORDER_SIGNED;
         $this->save();
 
+        event(new OrderSigned($this));
+
         return true;
     }
 
@@ -138,6 +148,10 @@ trait OrderHasActions
     {
         $this->setOrderStatus('deliver', 4);
         $this->save();
+
+        event(new OrderDelaied($this));
+
+        return true;
     }
 
     /**
@@ -146,17 +160,25 @@ trait OrderHasActions
      * @Date:2018-10-22T14:11:42+0800
      * @return [type] [description]
      */
-    public function unreceived()
+    public function unreceive()
     {
         $this->setOrderStatus('deliver', 3);
         $this->save();
+
+        event(new OrderUnreceived($this));
+
+        return true;
     }
 
-    public function completed()
+    public function complete()
     {
         $this->setOrderStatus('status', 8);
         $this->state = Order::ORDER_COMPLETED;
         $this->save();
+
+        event(new OrderCompleted($this));
+
+        return true;
     }
 
     /**
@@ -170,6 +192,10 @@ trait OrderHasActions
         $this->setOrderStatus('status', 9);
         $this->state = Order::ORDER_CLOSED;
         $this->save();
+
+        event(new OrderClosed($this));
+
+        return true;
     }
 
     /**

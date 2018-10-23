@@ -154,9 +154,9 @@ class Orders
      * @Date:2018-10-22T14:10:04+0800
      * @return [type] [description]
      */
-    public function unreceived(Order $order)
+    public function unreceive(Order $order)
     {
-        return $order->unreceived();
+        return $order->unreceive();
     }
 
     /**
@@ -164,9 +164,9 @@ class Orders
      * @Author:<C.Jason>
      * @Date:2018-10-22T14:15:48+0800
      */
-    public function completed(Order $order)
+    public function complete(Order $order)
     {
-        return $order->completed();
+        return $order->complete();
     }
 
     /**
@@ -237,6 +237,9 @@ class Orders
             $refund->items()->saveMany($refundItems);
 
             DB::commit();
+
+            event(new RefundApplied($order, $refund));
+
             return $refund;
         } catch (\Exception $e) {
             DB::rollBack();

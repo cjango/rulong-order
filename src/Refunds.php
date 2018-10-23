@@ -31,26 +31,48 @@ class Refunds
      * @Author:<C.Jason>
      * @Date:2018-10-23T14:20:41+0800
      * @param Refund $refund [description]
-     * @return [type] [description]
+     * @return RefundException
      */
     public function agree(Refund $refund)
     {
         return $refund->agree();
     }
 
-    public function refuse(Refund $refund)
+    /**
+     * [refuse description]
+     * @Author:<C.Jason>
+     * @Date:2018-10-23T15:17:18+0800
+     * @param Refund $refund [description]
+     * @param string|null $remark [description]
+     * @return [type] [description]
+     */
+    public function refuse(Refund $refund, string $remark = null)
     {
-        return $refund->refuse();
+        return $refund->refuse($remark);
     }
 
+    /**
+     * [process description]
+     * @Author:<C.Jason>
+     * @Date:2018-10-23T15:17:21+0800
+     * @param Refund $refund [description]
+     * @return [type] [description]
+     */
     public function process(Refund $refund)
     {
         return $refund->process();
     }
 
-    public function completed(Refund $refund)
+    /**
+     * [completed description]
+     * @Author:<C.Jason>
+     * @Date:2018-10-23T15:17:23+0800
+     * @param Refund $refund [description]
+     * @return [type] [description]
+     */
+    public function complete(Refund $refund)
     {
-        return $refund->completed();
+        return $refund->complete();
     }
 
 }
