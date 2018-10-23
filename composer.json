@@ -1,0 +1,30 @@
+{
+    "name": "rulong/order",
+    "description": "",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "C.Jason",
+            "email": "chenjxlg@163.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.1.3",
+        "laravel/framework": "*"
+    },
+    "autoload": {
+        "psr-0": {
+            "RuLong\\Order": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "RuLong\\Order\\ServiceProvider"
+            ],
+            "aliases": {
+                "Orders": "RuLong\\Order\\Facades\\Orders"
+            }
+        }
+    }
+}
