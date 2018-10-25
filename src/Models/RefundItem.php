@@ -17,7 +17,7 @@ class RefundItem extends Model
      * 所属退款单
      * @Author:<C.Jason>
      * @Date:2018-10-19T13:44:57+0800
-     * @return [type] [description]
+     * @return Refund
      */
     public function refund()
     {
@@ -68,6 +68,12 @@ class RefundItem extends Model
         return bcmul($this->price, $this->number, 3);
     }
 
+    /**
+     * 设置退款单详情使用
+     * @Author:<C.Jason>
+     * @Date:2018-10-25T14:28:11+0800
+     * @param OrderDetail $detail 订单详情实例
+     */
     public function setDetailAttribute($detail)
     {
         $this->attributes['order_id']        = $detail->order_id;

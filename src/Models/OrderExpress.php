@@ -28,12 +28,12 @@ class OrderExpress extends Model
      * 设置收货地址详细内容
      * @Author:<C.Jason>
      * @Date:2018-10-22T10:10:02+0800
-     * @param [type] $instance [description]
+     * @param Addressbook $Addressbook
      */
-    public function setInstanceAttribute($instance)
+    public function setInstanceAttribute($Addressbook)
     {
-        $this->attributes['name']    = $instance->getName();
-        $this->attributes['mobile']  = $instance->getMobile();
-        $this->attributes['address'] = $instance->getAddress();
+        $this->attributes['name']    = $Addressbook->getName();
+        $this->attributes['mobile']  = $Addressbook->getMobile();
+        $this->attributes['address'] = $Addressbook->getAddress();
     }
 }

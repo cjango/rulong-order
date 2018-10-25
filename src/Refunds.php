@@ -27,11 +27,11 @@ class Refunds
     }
 
     /**
-     * [agree description]
+     * 同意退款
      * @Author:<C.Jason>
      * @Date:2018-10-23T14:20:41+0800
-     * @param Refund $refund [description]
-     * @return RefundException
+     * @param Refund $refund 退款单实例
+     * @return RefundException|boolean
      */
     public function agree(Refund $refund)
     {
@@ -39,12 +39,12 @@ class Refunds
     }
 
     /**
-     * [refuse description]
+     * 拒绝退款
      * @Author:<C.Jason>
      * @Date:2018-10-23T15:17:18+0800
-     * @param Refund $refund [description]
-     * @param string|null $remark [description]
-     * @return [type] [description]
+     * @param Refund $refund 退款单实例
+     * @param string|null $remark 拒绝备注
+     * @return RefundException|boolean
      */
     public function refuse(Refund $refund, string $remark = null)
     {
@@ -52,11 +52,11 @@ class Refunds
     }
 
     /**
-     * [process description]
+     * 退款中
      * @Author:<C.Jason>
      * @Date:2018-10-23T15:17:21+0800
-     * @param Refund $refund [description]
-     * @return [type] [description]
+     * @param Refund $refund 退款单实例
+     * @return RefundException|boolean
      */
     public function process(Refund $refund)
     {
@@ -64,11 +64,11 @@ class Refunds
     }
 
     /**
-     * [completed description]
+     * 退款完成
      * @Author:<C.Jason>
      * @Date:2018-10-23T15:17:23+0800
-     * @param Refund $refund [description]
-     * @return [type] [description]
+     * @param Refund $refund 退款单实例
+     * @return RefundException|boolean
      */
     public function complete(Refund $refund)
     {

@@ -61,7 +61,7 @@ class Refund extends Model
      * 退款单物流
      * @Author:<C.Jason>
      * @Date:2018-10-19T10:36:03+0800
-     * @return OrderExpress
+     * @return RefundExpress
      */
     public function express()
     {

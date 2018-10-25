@@ -20,7 +20,7 @@ class RefundExpress extends Model
      * 所属退款单
      * @Author:<C.Jason>
      * @Date:2018-10-23T10:56:16+0800
-     * @return [type] [description]
+     * @return Refund
      */
     public function refund()
     {
