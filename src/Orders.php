@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\DB;
 use RuLong\Order\Contracts\Addressbook;
 use RuLong\Order\Contracts\Orderable;
 use RuLong\Order\Events\OrderCreated;
+use RuLong\Order\Events\RefundApplied;
 use RuLong\Order\Exceptions\OrderException;
 use RuLong\Order\Models\Order;
 use RuLong\Order\Models\OrderDetail;
@@ -70,12 +71,29 @@ class Orders
                 }
 
                 event(new OrderCreated($order));
+
+                if (config('rulong_order.auto_audit') === true) {
+                    $order->audit(true);
+                }
             });
 
             return true;
         } catch (\Exception $e) {
             throw new OrderException($e->getMessage());
         }
+    }
+
+    /**
+     * 订单审核
+     * @Author:<C.Jason>
+     * @Date:2018-10-25T16:16:06+0800
+     * @param Order $order    订单实例
+     * @param boolean $result 审核结果
+     * @return boolean|OrderException
+     */
+    public function audit(Order $order, $result = true)
+    {
+        return $order->audit($result);
     }
 
     /**
@@ -196,6 +214,10 @@ class Orders
      */
     public function refund(Order $order, array $items, float $total = null)
     {
+        if (!$order->canRefund()) {
+            throw new OrderException('订单状态不可退款');
+        }
+
         if (empty($items)) {
             throw new OrderException('至少选择一项退款商品');
         }

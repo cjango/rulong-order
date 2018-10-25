@@ -7,7 +7,7 @@ use RuLong\Order\Models\Order;
 /**
  * 订单签收完成
  */
-class OrderSigned
+class OrderSignined
 {
     public $order;
 

@@ -16,7 +16,6 @@ class Order extends Model
     const ORDER_INIT       = 'INIT'; // 订单初始化
     const ORDER_UNPAID     = 'UNPAID'; // 待支付
     const ORDER_PAID       = 'PAID'; // 已支付
-    const ORDER_AUDITED    = 'AUDITED'; // 已审核
     const ORDER_DELIVER    = 'DELIVER'; // 发货处理中
     const ORDER_DELIVERED  = 'DELIVERED'; // 已发货
     const ORDER_SIGNED     = 'SIGNED'; // 已签收

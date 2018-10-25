@@ -21,4 +21,9 @@ return [
         'length' => 20,
         'prefix' => 'R',
     ],
+
+    /**
+     * 订单自动审核
+     */
+    'auto_audit'     => true,
 ];

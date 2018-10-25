@@ -112,8 +112,8 @@ trait OrderHasAttributes
             0 => '未发货;',
             1 => '无需发货;',
             2 => '已发货;',
-            3 => '未收到;',
-            4 => '延迟收货;',
+            3 => '延迟收货;',
+            4 => '未收到;',
             5 => '已签收;',
             6 => '无需退货;',
             7 => '退货中;',
@@ -154,11 +154,8 @@ trait OrderHasAttributes
             case Order::ORDER_PAID:
                 $state = '已支付';
                 break;
-            case Order::ORDER_AUDITED:
-                $state = '已审核';
-                break;
             case Order::ORDER_DELIVER:
-                $state = '待发货';
+                $state = '发货处理中';
                 break;
             case Order::ORDER_DELIVERED:
                 $state = '已发货';
