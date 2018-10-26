@@ -222,7 +222,7 @@ trait OrderHasActions
             throw new OrderException('订单状态不可完成');
         }
 
-        $this->setOrderStatus('status', 8);
+        $this->setOrderStatus('status', 9);
         $this->state = Order::ORDER_COMPLETED;
         $this->save();
 
@@ -243,7 +243,7 @@ trait OrderHasActions
             throw new OrderException('订单状态不可关闭');
         }
 
-        $this->setOrderStatus('status', 9);
+        $this->setOrderStatus('status', 8);
         $this->state = Order::ORDER_CLOSED;
         $this->save();
 
@@ -265,6 +265,6 @@ trait OrderHasActions
      */
     public function createRefund(array $items, float $total = null)
     {
-        return \Orders::refund($this, $items, $total);
+        return \Refunds::create($order, $items, $total);
     }
 }

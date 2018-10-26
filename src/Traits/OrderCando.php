@@ -2,6 +2,7 @@
 
 namespace RuLong\Order\Traits;
 
+use Carbon\Carbon;
 use RuLong\Order\Models\Order;
 
 trait OrderCando
@@ -108,7 +109,11 @@ trait OrderCando
      */
     public function canComplete(): bool
     {
-        return false;
+        return (in_array($this->state, [Order::ORDER_SIGNED]))
+            && ($this->getOrderStatus('status') == 1)
+            && (in_array($this->getOrderStatus('pay'), [1, 7]))
+            && (in_array($this->getOrderStatus('deliver'), [5, 6, 8]))
+            && ($this->updated_at->diffInDays(Carbon::now(), false) > config('rulong_order.completed_days'));
     }
 
     /**
@@ -119,7 +124,10 @@ trait OrderCando
      */
     public function canClose(): bool
     {
-        return false;
+        return (in_array($this->state, [Order::ORDER_INIT, Order::ORDER_UNPAID, Order::ORDER_CANCEL]))
+            && (in_array($this->getOrderStatus('status'), [0, 1, 2, 3, 4]))
+            && (in_array($this->getOrderStatus('pay'), [0]))
+            && (in_array($this->getOrderStatus('deliver'), [0, 1]));
     }
 
     /**
@@ -130,9 +138,9 @@ trait OrderCando
      */
     public function canRefund(): bool
     {
-        return (in_array($this->state, [Order::ORDER_DELIVERED, Order::ORDER_SIGNED]))
+        return (in_array($this->state, [Order::ORDER_PAID, Order::ORDER_DELIVER, Order::ORDER_DELIVERED, Order::ORDER_SIGNED, Order::REFUND_APPLY, Order::REFUND_AGREE, Order::REFUND_REFUSE, Order::REFUND_PROCESS, Order::REFUND_COMPLETED]))
             && ($this->getOrderStatus('status') == 1)
-            && ($this->getOrderStatus('pay') == 1)
-            && (in_array($this->getOrderStatus('deliver'), [1, 2, 3, 4, 5]));
+            && (in_array($this->getOrderStatus('pay'), [1, 2, 3, 5, 6, 7]))
+            && (in_array($this->getOrderStatus('deliver'), [0, 1, 2, 3, 4, 5, 6]));
     }
 }

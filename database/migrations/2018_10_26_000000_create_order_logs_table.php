@@ -17,8 +17,11 @@ class CreateOrderLogsTable extends Migration
         Schema::create('order_logs', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('order_id')->unsigned()->index('order_id');
-            $table->integer('user_id')->unsigned();
-            $table->text('logs', 65535);
+            $table->integer('user_id')->unsigned()->default(0);
+            $table->string('user_type')->nullable();
+            $table->string('state');
+            $table->string('status');
+            $table->text('logs', 65535)->nullable();
             $table->dateTime('created_at')->nullable();
         });
     }

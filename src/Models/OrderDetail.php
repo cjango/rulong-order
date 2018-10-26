@@ -74,6 +74,17 @@ class OrderDetail extends Model
     }
 
     /**
+     * 判断订单条目，是否可退款
+     * @Author:<C.Jason>
+     * @Date:2018-10-26T10:43:08+0800
+     * @return [type] [description]
+     */
+    public function canRefund()
+    {
+        return $this->max_refund > 0;
+    }
+
+    /**
      * 关联退款详单
      * @Author:<C.Jason>
      * @Date:2018-10-23T11:44:22+0800

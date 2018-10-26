@@ -2,6 +2,7 @@
 
 namespace RuLong\Order\Models;
 
+use Auth;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use RuLong\Order\Traits\OrderCando;
@@ -24,9 +25,9 @@ class Order extends Model
     const REFUND_REFUSE    = 'REFUND_REFUSE'; // 拒绝退款
     const REFUND_PROCESS   = 'REFUND_PROCESS'; // 退款中
     const REFUND_COMPLETED = 'REFUND_COMPLETED'; // 退款完成
-    const ORDER_COMPLETED  = 'COMPLETED'; // 已完成
     const ORDER_CLOSED     = 'CLOSED'; // 已关闭
     const ORDER_CANCEL     = 'CANCEL'; // 取消
+    const ORDER_COMPLETED  = 'COMPLETED'; // 已完成
 
     const CANCEL_USER   = 2; // 买家取消
     const CANCEL_SELLER = 3; // 卖家取消
@@ -45,6 +46,25 @@ class Order extends Model
         self::creating(function ($model) {
             $model->orderid = Helper::orderid(config('rulong_order.order_orderid.length'), config('rulong_order.order_orderid.prefix'));
         });
+
+        self::updated(function ($model) {
+            $model->logs()->create([
+                'user'   => self::detectUser(),
+                'status' => $model->getOriginal('status', '0000') . '|' . $model->status,
+                'state'  => $model->getOriginal('state') . '|' . $model->state,
+            ]);
+        });
+    }
+
+    /**
+     * 侦测当前操作用户
+     * @Author:<C.Jason>
+     * @Date:2018-10-26T14:29:52+0800
+     * @return Auth
+     */
+    public static function detectUser()
+    {
+        return Auth::user() ?: Auth::guard(config('rulong_order.admin_guard'))->user();
     }
 
     /**

@@ -26,4 +26,11 @@ return [
      * 订单自动审核
      */
     'auto_audit'     => true,
+
+    /**
+     * N天后无事件的订单 可完成
+     */
+    'completed_days' => 7,
+
+    'admin_guard'    => 'rulong',
 ];

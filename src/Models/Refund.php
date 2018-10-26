@@ -4,13 +4,14 @@ namespace RuLong\Order\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use RuLong\Order\Traits\RefundCando;
 use RuLong\Order\Traits\RefundHasActions;
 use RuLong\Order\Utils\Helper;
 
 class Refund extends Model
 {
 
-    use RefundHasActions, SoftDeletes;
+    use RefundHasActions, RefundCando, SoftDeletes;
 
     const REFUND_APPLY     = 'REFUND_APPLY'; // 申请退款
     const REFUND_AGREE     = 'REFUND_AGREE'; // 同意退款

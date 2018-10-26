@@ -6,13 +6,11 @@ use Illuminate\Support\Facades\DB;
 use RuLong\Order\Contracts\Addressbook;
 use RuLong\Order\Contracts\Orderable;
 use RuLong\Order\Events\OrderCreated;
-use RuLong\Order\Events\RefundApplied;
 use RuLong\Order\Exceptions\OrderException;
 use RuLong\Order\Models\Order;
 use RuLong\Order\Models\OrderDetail;
 use RuLong\Order\Models\OrderExpress;
 use RuLong\Order\Models\Refund;
-use RuLong\Order\Models\RefundItem;
 
 class Orders
 {
@@ -33,7 +31,7 @@ class Orders
      * @param float  $freight 运费
      * @return boolean|OrderException
      */
-    public function create(int $userID, array $items, Addressbook $address = null, string $remark = null, float $amount = null, float $freight = 0)
+    public function create(int $userID, array $items, Addressbook $address = null, string $remark = null, float $amount = null, float $freight = null)
     {
         try {
             if (is_null($amount) && !empty($items)) {
@@ -42,7 +40,7 @@ class Orders
                     if ($item->goodsCanBuy < $item->number) {
                         throw new OrderException('【' . $item->goodsTitle . '】商品库存不足');
                     }
-                    $amount = bcadd($amount, bcmul($item->price, $item->number));
+                    $amount += $item->price * $item->number;
                 }
             } elseif (is_null($amount) && !is_numeric($amount)) {
                 throw new OrderException('订单金额必须是数字类型');
@@ -214,59 +212,7 @@ class Orders
      */
     public function refund(Order $order, array $items, float $total = null)
     {
-        if (!$order->canRefund()) {
-            throw new OrderException('订单状态不可退款');
-        }
-
-        if (empty($items)) {
-            throw new OrderException('至少选择一项退款商品');
-        }
-        $maxAmount   = 0;
-        $refundItems = [];
-
-        //判断最大可退数量
-        foreach ($items as $item) {
-            $detail = OrderDetail::find($item['item_id']);
-            if ($item['number'] <= 0) {
-                throw new OrderException('【' . $detail->item->getTitle() . '】退货数量必须大于0');
-            }
-            if ($item['number'] > $detail->max_refund) {
-                throw new OrderException('【' . $detail->item->getTitle() . '】超过最大可退数量');
-            }
-            $maxAmount     = bcadd($maxAmount, bcmul($detail->price, $item['number']));
-            $refundItems[] = new RefundItem(['detail' => $detail, 'number' => $item['number']]);
-        }
-
-        // 自动计算退款金额
-        if (is_null($total)) {
-            $total = $maxAmount;
-        } elseif ($total > $maxAmount) {
-            throw new OrderException('超过最大可退金额');
-        }
-
-        DB::beginTransaction();
-        try {
-            $order->setOrderStatus('pay', 2);
-            $order->setOrderStatus('deliver', 7);
-            $order->state = Order::REFUND_APPLY;
-            $order->save();
-
-            $refund = $order->refund()->create([
-                'refund_total' => $total,
-                'state'        => Refund::REFUND_APPLY,
-            ]);
-
-            $refund->items()->saveMany($refundItems);
-
-            DB::commit();
-
-            event(new RefundApplied($order, $refund));
-
-            return $refund;
-        } catch (\Exception $e) {
-            DB::rollBack();
-            throw new OrderException($e->getMessage());
-        }
+        return \Refunds::create($order, $items, $total);
     }
 
 }

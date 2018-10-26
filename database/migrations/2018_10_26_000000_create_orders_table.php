@@ -19,7 +19,7 @@ class CreateOrdersTable extends Migration
             $table->string('orderid', 32)->unique('orderid')->comment('订单编号');
             $table->integer('user_id')->unsigned();
             $table->decimal('amount', 20, 3)->unsigned()->comment('商品金额');
-            $table->decimal('freight', 10, 3)->unsigned()->default(0.000)->comment('运费');
+            $table->decimal('freight', 10, 3)->unsigned()->nullable()->comment('运费');
             $table->string('status', 16)->default('0000')->comment('4码订单状态');
             $table->string('state', 16)->comment('状态');
             $table->string('remark')->nullable()->comment('订单备注');

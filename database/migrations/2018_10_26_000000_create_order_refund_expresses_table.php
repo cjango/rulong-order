@@ -17,8 +17,8 @@ class CreateOrderRefundExpressesTable extends Migration
         Schema::create('order_refund_expresses', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('refund_id')->unsigned()->index('refund_id');
-            $table->string('company', 32);
-            $table->string('number', 32);
+            $table->string('company', 32)->nullable();
+            $table->string('number', 32)->nullable();
             $table->dateTime('deliver_at')->nullable()->comment('发货时间');
             $table->dateTime('receive_at')->nullable()->comment('收到时间');
             $table->timestamps();
