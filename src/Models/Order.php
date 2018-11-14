@@ -8,14 +8,15 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use RuLong\Order\Traits\OrderCando;
 use RuLong\Order\Traits\OrderHasActions;
 use RuLong\Order\Traits\OrderHasAttributes;
+use RuLong\Order\Traits\OrderHasScopes;
 use RuLong\Order\Utils\Helper;
 
 class Order extends Model
 {
-    use OrderCando, OrderHasActions, OrderHasAttributes, SoftDeletes;
+    use OrderCando, OrderHasActions, OrderHasAttributes, OrderHasScopes, SoftDeletes;
 
     const ORDER_INIT       = 'INIT'; // 订单初始化
-    const ORDER_UNPAID     = 'UNPAID'; // 待支付
+    const ORDER_UNPAY      = 'UNPAY'; // 待支付
     const ORDER_PAID       = 'PAID'; // 已支付
     const ORDER_DELIVER    = 'DELIVER'; // 发货处理中
     const ORDER_DELIVERED  = 'DELIVERED'; // 已发货
@@ -38,6 +39,11 @@ class Order extends Model
     protected $dates = [
         'paid_at',
     ];
+
+    public function getRouteKeyName()
+    {
+        return 'orderid';
+    }
 
     public static function boot()
     {
@@ -75,7 +81,18 @@ class Order extends Model
      */
     public function user()
     {
-        return $this->belongsTo(config('rulong_order.user_model'));
+        return $this->belongsTo(config('rulong_order.user_model'))->withDefault();
+    }
+
+    /**
+     * 关联所属用户
+     * @Author:<C.Jason>
+     * @Date:2018-10-19T14:05:42+0800
+     * @return User
+     */
+    public function seller()
+    {
+        return $this->belongsTo(config('rulong_order.user_model'))->withDefault();
     }
 
     /**

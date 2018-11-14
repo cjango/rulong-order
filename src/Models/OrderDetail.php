@@ -32,6 +32,7 @@ class OrderDetail extends Model
         $this->goodsTitle  = $goods->getTitle();
 
         $this->attributes['price']     = $goods->getPrice();
+        $this->attributes['score']     = $goods->getScore();
         $this->attributes['item_id']   = $goods->id;
         $this->attributes['item_type'] = get_class($goods);
     }

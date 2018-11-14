@@ -33,7 +33,7 @@ trait OrderHasActions
 
         if ($result === true) {
             // 审核通过，设置订单为 未支付状态，分状态 进行中
-            $this->state = Order::ORDER_UNPAID;
+            $this->state = Order::ORDER_UNPAY;
             $this->setOrderStatus('status', 1);
         } else {
             // 审核不通过，设置订单为 取消状态，分状态 系统取消

@@ -27,7 +27,7 @@ trait OrderCando
      */
     public function canPay(): bool
     {
-        return ($this->state == Order::ORDER_UNPAID)
+        return ($this->state == Order::ORDER_UNPAY)
             && ($this->getOrderStatus('status') == 1)
             && ($this->getOrderStatus('pay') == 0);
     }
@@ -40,7 +40,7 @@ trait OrderCando
      */
     public function canCancel(): bool
     {
-        return (in_array($this->state, [Order::ORDER_INIT, Order::ORDER_UNPAID]))
+        return (in_array($this->state, [Order::ORDER_INIT, Order::ORDER_UNPAY]))
             && (in_array($this->getOrderStatus('status'), [0, 1]))
             && ($this->getOrderStatus('pay') == 0);
     }
@@ -124,7 +124,7 @@ trait OrderCando
      */
     public function canClose(): bool
     {
-        return (in_array($this->state, [Order::ORDER_INIT, Order::ORDER_UNPAID, Order::ORDER_CANCEL]))
+        return (in_array($this->state, [Order::ORDER_INIT, Order::ORDER_UNPAY, Order::ORDER_CANCEL]))
             && (in_array($this->getOrderStatus('status'), [0, 1, 2, 3, 4]))
             && (in_array($this->getOrderStatus('pay'), [0]))
             && (in_array($this->getOrderStatus('deliver'), [0, 1]));

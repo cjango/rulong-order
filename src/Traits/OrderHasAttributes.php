@@ -148,7 +148,7 @@ trait OrderHasAttributes
             case Order::ORDER_INIT:
                 $state = '订单初始化';
                 break;
-            case Order::ORDER_UNPAID:
+            case Order::ORDER_UNPAY:
                 $state = '待支付';
                 break;
             case Order::ORDER_PAID:

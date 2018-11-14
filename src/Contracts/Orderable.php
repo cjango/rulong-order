@@ -12,28 +12,34 @@ interface Orderable
      * 获取商品名称
      * @return string
      */
-    public function getTitle();
+    function getTitle();
 
     /**
      * 获取商品单价
      * @return string
      */
-    public function getPrice();
+    function getPrice();
+
+    /**
+     * 获取商品积分
+     * @return string
+     */
+    function getScore();
 
     /**
      * 获取商品库存
      * @return string
      */
-    public function getStock();
+    function getStock();
 
     /**
      * 扣除库存方法
      */
-    public function deductStock($stock);
+    function deductStock($stock);
 
     /**
      * 增加库存方法
      */
-    public function addStock($stock);
+    function addStock($stock);
 
 }

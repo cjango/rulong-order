@@ -36,21 +36,24 @@ class Orders
         try {
             if (is_null($amount) && !empty($items)) {
                 $amount = 0;
+                $score  = 0;
                 foreach ($items as $item) {
                     if ($item->goodsCanBuy < $item->number) {
                         throw new OrderException('【' . $item->goodsTitle . '】商品库存不足');
                     }
                     $amount += $item->price * $item->number;
+                    $score += $item->score * $item->number;
                 }
             } elseif (is_null($amount) && !is_numeric($amount)) {
                 throw new OrderException('订单金额必须是数字类型');
             }
 
-            DB::transaction(function () use ($userID, $items, $address, $amount, $freight, $remark) {
+            DB::transaction(function () use ($userID, $items, $address, $amount, $score, $freight, $remark) {
                 // 创建订单
                 $order = Order::create([
                     'user_id' => $userID,
                     'amount'  => $amount,
+                    'score'   => $score,
                     'freight' => $freight,
                     'state'   => Order::ORDER_INIT,
                     'remark'  => $remark,
